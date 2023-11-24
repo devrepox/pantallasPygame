@@ -1,28 +1,32 @@
-class Button():
-	def __init__(self, image, posx,posy,text_input, base_color, hovering_color):
-		self.image = image
-		self.x_pos = posx
-		self.y_pos = posy
-		self.base_color, self.hovering_color = base_color, hovering_color
-		self.text_input = text_input
-		self.text = self.font.render(self.text_input, True, self.base_color)
-		if self.image is None:
-			self.image = self.text
-		self.rect = self.image.get_rect(center=(self.x_pos, self.y_pos))
-		self.text_rect = self.text.get_rect(center=(self.x_pos, self.y_pos))
+import pygame
+from pygame import *
 
-	def update(self, screen):
-		if self.image is not None:
-			screen.blit(self.image, self.rect)
-		screen.blit(self.text, self.text_rect)
+class Button:
+    def __init__(self, posX, posY, width, height, text, color, colorActive, colorPassive, sizeFont):
+        self.x = posX
+        self.y = posY
+        self.width = width
+        self.height = height
+        self.color = color
+        self.colorActive = colorActive
+        self.colorPassive = colorPassive
+        self.text = text
+        self.textColor = (255,255,255)
+        self.font = pygame.font.Font(None, sizeFont)
+    def drawButton(self, window):
+        pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
+        textSurface = self.font.render(self.text, True, self.textColor)
+        textRect = textSurface.get_rect()
+        textRect.center = (self.x + self.width//2, self.y + self.height//2)
+        window.blit(textSurface, textRect)
+    
+    def is_clicked(self, mouse_pos):
+        return self.x < mouse_pos[0] < self.x + self.width and self.y < mouse_pos[1] < self.y + self.height
 
-	def checkForInput(self, position):
-		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-			return True
-		return False
-
-	def changeColor(self, position):
-		if position[0] in range(self.rect.left, self.rect.right) and position[1] in range(self.rect.top, self.rect.bottom):
-			self.text = self.font.render(self.text_input, True, self.hovering_color)
-		else:
-			self.text = self.font.render(self.text_input, True, self.base_color)
+    def seeActiveness(self, mouse_pos,window):
+        if self.is_clicked(mouse_pos):
+            self.color = self.colorActive
+            self.drawButton(window)
+        else:
+            self.color = self.colorPassive
+            self.drawButton(window)

@@ -5,6 +5,7 @@ class register(Pantallas):
     def __init__(self,manager):
         self.controlador=manager
         self.pantalla=manager.screen
+        pygame.display.set_caption('Pantalla2')
         
     def runner(self):
         for event in pygame.event.get():
@@ -12,7 +13,6 @@ class register(Pantallas):
                     self.controlador.running = False
                 if event.type==pygame.KEYDOWN:
                     if event.key==pygame.K_1:
-                         print("tecla 1")
                          self.change("main")
                      
         self.pantalla.fill("blue")
